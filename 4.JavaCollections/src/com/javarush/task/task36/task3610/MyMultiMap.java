@@ -58,7 +58,6 @@ public class MyMultiMap<K, V> extends HashMap<K, V> implements Cloneable, Serial
 
     @Override
     public Set<K> keySet() {
-        //напишите тут ваш код
         return map.keySet();
     }
 
@@ -73,7 +72,6 @@ public class MyMultiMap<K, V> extends HashMap<K, V> implements Cloneable, Serial
 
     @Override
     public boolean containsKey(Object key) {
-        //напишите тут ваш код
         return map.containsKey(key);
     }
 
