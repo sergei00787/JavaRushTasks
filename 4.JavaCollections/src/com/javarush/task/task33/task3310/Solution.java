@@ -1,6 +1,8 @@
 package com.javarush.task.task33.task3310;
 
+import com.javarush.task.task33.task3310.strategy.FileStorageStrategy;
 import com.javarush.task.task33.task3310.strategy.HashMapStorageStrategy;
+import com.javarush.task.task33.task3310.strategy.OurHashMapStorageStrategy;
 import com.javarush.task.task33.task3310.strategy.StorageStrategy;
 
 import java.util.Date;
@@ -202,60 +204,126 @@ import java.util.Set;
  * 2. В классе OurHashMapStorageStrategy должны быть созданы все необходимые поля (согласно условию задачи).
  * 3. Методы интерфейса StorageStrategy должны быть реализованы в OurHashMapStorageStrategy таким образом, чтобы обеспечивать корректную работу Shortener созданного на его основе.
  * 4. В классе OurHashMapStorageStrategy должны присутствовать все вспомогательные методы перечисленные в условии задачи.
+ *
+ *
+ * Shortener (9)
+ * Напишем еще одну стратегию, назовем ее FileStorageStrategy. Она будет очень похожа на стратегию OurHashMapStorageStrategy, но в качестве ведер (англ. buckets) будут файлы. Я знаю, ты знаешь о каких buckets идет речь, если нет - повтори внутреннее устройство HashMap.
+ * 9.1. Создай класс FileBucket в пакете strategy.
+ * 9.2. Добавь в класс поле Path path. Это будет путь к файлу.
+ * 9.3. Добавь в класс конструктор без параметров, он должен:
+ * 9.3.1. Инициализировать path временным файлом. Файл должен быть размещен в директории для временных файлов и иметь случайное имя.
+ *
+ * Подсказка: Files.createTempFile.
+ *
+ * 9.3.2. Создавать новый файл, используя path. Если такой файл уже есть, то заменять его.
+ * 9.3.3. Обеспечивать удаление файла при выходе из программы.
+ *
+ * Подсказка: deleteOnExit().
+ *
+ * 9.4. Добавь в класс методы:
+ * 9.4.1. public long getFileSize(), он должен возвращать размер файла на который указывает path.
+ * 9.4.2. public void putEntry(Entry entry) - должен сериализовывать переданный entry в файл. Учти, каждый entry может содержать еще один entry.
+ * 9.4.3. public Entry getEntry() - должен забирать entry из файла. Если файл имеет нулевой размер, вернуть null.
+ * 9.4.4.public void remove() - удалять файл на который указывает path.
+ * Конструктор и методы не должны кидать исключения.
+ *
+ *
+ * Требования:
+ * 1. В классе FileBucket должно быть создано поле path типа Path.
+ * 2. Конструктор без параметров класса FileBucket должен быть реализован в соответствии с условием задачи.
+ * 3. Метод getFileSize должен возвращать размер файла на который указывает path.
+ * 4. Метод putEntry должен сериализовывать полученный объект типа Entry в файл на который указывает path, чтобы получить OutputStream используй метод Files.newOutputStream.
+ * 5. Метод getEntry должен десериализовывать объект типа Entry из файл на который указывает path, чтобы получить InputStream используй метод Files.newInputStream.
+ * 6. Метод remove должен удалять файл на который указывает path с помощью метода Files.delete().
+ *
+ *
+ *
+ *
+ * Shortener (10)
+ * Создай и реализуй класс FileStorageStrategy. Он должен:
+ * 10.1. Реализовывать интерфейс StorageStrategy.
+ * 10.2. Использовать FileBucket в качестве ведер (англ. bucket).
+ *
+ * Подсказка: класс должен содержать поле FileBucket[] table.
+ *
+ * 10.3. Работать аналогично тому, как это делает OurHashMapStorageStrategy, но удваивать количество ведер не когда количество элементов size станет больше какого-то порога, а когда размер одного из ведер (файлов) стал больше bucketSizeLimit.
+ * 10.3.1. Добавь в класс поле long bucketSizeLimit.
+ * 10.3.2. Проинициализируй его значением по умолчанию, например, 10000 байт.
+ * 10.3.3. Добавь сеттер и геттер для этого поля.
+ * 10.4. При реализации метода resize(int newCapacity) проследи, чтобы уже не нужные файлы были удалены (вызови метод remove()).
+ * Проверь новую стратегию в методе main(). Учти, что стратегия FileStorageStrategy гораздо более медленная, чем остальные. Не используй большое количество элементов для теста, это может занять оооочень много времени.
+ * Запусти программу и сравни скорость работы всех 3х стратегий.
+ *
+ * P.S. Обрати внимание на наличие всех необходимых полей в классе FileStorageStrategy, по аналогии с OurHashMapStorageStrategy:
+ * static final int DEFAULT_INITIAL_CAPACITY
+ * static final long DEFAULT_BUCKET_SIZE_LIMIT
+ * FileBucket[] table
+ * int size
+ * private long bucketSizeLimit = DEFAULT_BUCKET_SIZE_LIMIT
+ * long maxBucketSize
+ *
+ *
+ * Требования:
+ * 1. Класс FileStorageStrategy должен поддерживать интерфейс StorageStrategy.
+ * 2. В классе FileStorageStrategy должны быть созданы все необходимые поля (согласно условию задачи).
+ * 3. Методы интерфейса StorageStrategy должны быть реализованы в FileStorageStrategy таким образом, чтобы обеспечивать корректную работу Shortener созданного на его основе.
  */
 
 public class Solution {
-    public static void main(String[] args){
-        testStrategy(new HashMapStorageStrategy(), 10000);
+    public static void main(String[] args) {
+        long elementsNumber = 10000;
+
+        testStrategy(new HashMapStorageStrategy(), elementsNumber);
+
+        testStrategy(new FileStorageStrategy(), elementsNumber);
+
+        testStrategy(new OurHashMapStorageStrategy(), elementsNumber);
     }
 
-    public static Set<Long> getIds(Shortener shortener, Set<String> strings){
-        Set<Long> result = new HashSet<>();
-        Long curId = null;
-        for (String str : strings) {
-            curId = shortener.getId(str);
-           if (curId != null) result.add(curId);
-        }
-        return result;
-    }
+    public static void testStrategy(StorageStrategy strategy, long elementsNumber) {
+        Helper.printMessage(strategy.getClass().getSimpleName() + ":");
 
-    public static Set<String> getStrings(Shortener shortener, Set<Long> keys){
-        Set<String> result = new HashSet<>();
-        String curString = null;
-        for (Long num: keys) {
-            curString = shortener.getString(num);
-            if (curString != null) result.add(curString);
-        }
-        return result;
-    }
+        Set<String> origStrings = new HashSet<>();
 
-    public static void testStrategy(StorageStrategy strategy, long elementsNumber){
-        System.out.println(strategy.getClass().getSimpleName());
-
-        Set<String> setString = new HashSet<>();
-        Set<Long> setLong = new HashSet<>();
-
-        for (int i = 0; i < elementsNumber; i++) {
-            setString.add(Helper.generateRandomString());
+        for (int i = 0; i < elementsNumber; ++i) {
+            origStrings.add(Helper.generateRandomString());
         }
 
         Shortener shortener = new Shortener(strategy);
 
-        Date dateStart = new Date();
-        setLong = getIds(shortener, setString);
-        Date dateFinish = new Date();
+        Date startTimestamp = new Date();
+        Set<Long> keys = getIds(shortener, origStrings);
+        Date endTimestamp = new Date();
+        long time = endTimestamp.getTime() - startTimestamp.getTime();
+        Helper.printMessage("Время получения идентификаторов для " + elementsNumber + " строк: " + time);
 
-        System.out.println(dateFinish.getTime()-dateStart.getTime());
+        startTimestamp = new Date();
+        Set<String> strings = getStrings(shortener, keys);
+        endTimestamp = new Date();
+        time = endTimestamp.getTime() - startTimestamp.getTime();
+        Helper.printMessage("Время получения строк для " + elementsNumber + " идентификаторов: " + time);
 
-        Set<String> setString2 = new HashSet<>();
-        Date dateStart2 = new Date();
-        setString2 = getStrings(shortener, setLong);
-        Date dateFinish2 = new Date();
+        if (origStrings.equals(strings))
+            Helper.printMessage("Тест пройден.");
+        else
+            Helper.printMessage("Тест не пройден.");
 
-        System.out.println(dateFinish2.getTime()-dateStart2.getTime());
+        Helper.printMessage("");
+    }
 
-        String resultStr = setString.equals(setString2) ? "Тест пройден." : "Тест не пройден.";
-        System.out.println(resultStr);
-
+    public static Set<Long> getIds(Shortener shortener, Set<String> strings) {
+        Set<Long> keys = new HashSet<>();
+        for (String s : strings) {
+            keys.add(shortener.getId(s));
         }
+        return keys;
+    }
+
+    public static Set<String> getStrings(Shortener shortener, Set<Long> keys) {
+        Set<String> strings = new HashSet<>();
+        for (Long k : keys) {
+            strings.add(shortener.getString(k));
+        }
+        return strings;
+    }
 }
