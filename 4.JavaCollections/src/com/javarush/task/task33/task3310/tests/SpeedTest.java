@@ -53,7 +53,7 @@ public class SpeedTest {
         long timeGetStringsShotner1 = getTimeToGetStrings(shortener1,resultSetLong,origStrings);
         long timeGetStringsShotner2 = getTimeToGetStrings(shortener2,resultSetLong,origStrings);
         Assert.assertEquals(timeGetStringsShotner1, timeGetStringsShotner2, 30);
-
+                
     }
 
 }
