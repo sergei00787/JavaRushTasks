@@ -21,9 +21,9 @@ public class Solution {
     public static int romanToInteger(String s) {
         String[] strings = s.split("");
         int result = 0;
-        for (int i = strings.length-1; i > 0; i--) {
-            if (letterToInt(strings[i]) > letterToInt(strings[i - 1])) {
-                result = (result - letterToInt(strings[i - 1])) + (letterToInt(strings[i - 1]) - letterToInt(strings[i]));
+        for (int i = strings.length-1; i >= 0; i--) {
+            if (i > 0 && letterToInt(strings[i]) > letterToInt(strings[i - 1])) {
+                result = result + letterToInt(strings[i]) - 2 * letterToInt(strings[i - 1]);
             } else {
                 result = result + letterToInt(strings[i]);
             }
