@@ -3,6 +3,7 @@ package com.javarush.task.task28.task2810;
 import com.javarush.task.task28.task2810.model.Provider;
 import com.javarush.task.task28.task2810.vo.Vacancy;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -23,10 +24,10 @@ public class Controller {
                 '}';
     }
 
-    public void scan() {
+    public void scan() throws IOException {
         List<Vacancy> vacancies = new ArrayList<>();
         for (Provider provider : providers) {
-            vacancies.addAll(provider.getJavaVacancies("MyTown"));
+            vacancies.addAll(provider.getJavaVacancies("Новосибирск"));
         }
         System.out.println(vacancies.size());
     }
