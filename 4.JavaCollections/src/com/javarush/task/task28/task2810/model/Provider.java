@@ -16,7 +16,7 @@ public class Provider {
         this.strategy = strategy;
     }
 
-    public List<Vacancy> getJavaVacancies(String searchString) throws IOException {
+    public List<Vacancy> getJavaVacancies(String searchString) {
         return strategy.getVacancies(searchString);
     }
 }
