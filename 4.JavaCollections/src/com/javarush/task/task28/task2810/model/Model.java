@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Model {
+
     private View view;
     private Provider[] providers;
 

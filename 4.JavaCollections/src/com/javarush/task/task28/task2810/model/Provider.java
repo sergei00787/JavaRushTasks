@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class Provider {
+
     private Strategy strategy;
 
     public Provider(Strategy strategy) {
@@ -19,4 +20,5 @@ public class Provider {
     public List<Vacancy> getJavaVacancies(String searchString) {
         return strategy.getVacancies(searchString);
     }
+
 }
