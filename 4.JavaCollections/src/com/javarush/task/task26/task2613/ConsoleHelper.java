@@ -5,10 +5,14 @@ import com.javarush.task.task26.task2613.exception.InterruptOperationException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ResourceBundle;
 
 public class ConsoleHelper {
     private static final BufferedReader bis = new BufferedReader(new InputStreamReader(System.in));
 
+    private static ResourceBundle res =
+            ResourceBundle.getBundle(CashMachine.class.getPackage().getName()
+                    + ".resources.common_en");
 
     public static void writeMessage(String message) {
         System.out.println(message);
@@ -16,23 +20,23 @@ public class ConsoleHelper {
 
     public static String readString() throws InterruptOperationException {
         try {
-            String line = bis.readLine();
-            if (line.toUpperCase().equals("EXIT")) {
+            String text = bis.readLine();
+            if ("exit".equals(text.toLowerCase())) {
                 throw new InterruptOperationException();
             }
-            return bis.readLine();
-        } catch (IOException e) {
-            e.printStackTrace();
+
+            return text;
+        } catch (IOException ignored) { //suppose it will never occur
         }
         return null;
     }
 
     public static String askCurrencyCode() throws InterruptOperationException {
         while (true) {
-            ConsoleHelper.writeMessage("Please choose a currency code, for example USD");
+            ConsoleHelper.writeMessage(res.getString("choose.operation"));
             String currencyCode = ConsoleHelper.readString();
             if (currencyCode == null || currencyCode.trim().length() != 3) {
-                ConsoleHelper.writeMessage("Please specify valid data.");
+                ConsoleHelper.writeMessage(res.getString("invalid.data"));
                 continue;
             }
             return currencyCode.trim().toUpperCase();
@@ -41,17 +45,17 @@ public class ConsoleHelper {
 
     public static String[] getValidTwoDigits(String currencyCode) throws InterruptOperationException {
         while (true) {
-            ConsoleHelper.writeMessage(String.format("Please specify integer denomination and integer count. For example '10 3' means 30 %s", currencyCode));
+            ConsoleHelper.writeMessage(String.format(res.getString("choose.denomination.and.count.format"), currencyCode));
             String s = ConsoleHelper.readString();
             String[] split = null;
             if (s == null || (split = s.split(" ")).length != 2) {
-                ConsoleHelper.writeMessage("Please specify valid data.");
+                ConsoleHelper.writeMessage(res.getString("invalid.data"));
             } else {
                 try {
                     if (Integer.parseInt(split[0]) <= 0 || Integer.parseInt(split[1]) <= 0)
-                        ConsoleHelper.writeMessage("Please specify valid data.");
+                        ConsoleHelper.writeMessage(res.getString("invalid.data"));
                 } catch (NumberFormatException e) {
-                    ConsoleHelper.writeMessage("Please specify valid data.");
+                    ConsoleHelper.writeMessage(res.getString("invalid.data"));
                     continue;
                 }
                 return split;
