@@ -8,12 +8,10 @@ import java.util.ResourceBundle;
 
 class LoginCommand implements Command {
     private ResourceBundle res =
-            ResourceBundle.getBundle(CashMachine.class.getPackage().getName()
-                    + ".resources.login_en");
+            ResourceBundle.getBundle(CashMachine.RESOURCE_PATH + "login_en");
 
     private ResourceBundle validCreditCards =
-            ResourceBundle.getBundle(CashMachine.class.getPackage().getName()
-                    + ".resources.verifiedCards");
+            ResourceBundle.getBundle(CashMachine.RESOURCE_PATH + "verifiedCards");
 
     @Override
     public void execute() throws InterruptOperationException {
