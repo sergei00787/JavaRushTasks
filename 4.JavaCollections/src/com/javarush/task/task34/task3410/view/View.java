@@ -2,9 +2,9 @@ package com.javarush.task.task34.task3410.view;
 
 import com.javarush.task.task34.task3410.controller.Controller;
 import com.javarush.task.task34.task3410.controller.EventListener;
+import com.javarush.task.task34.task3410.model.GameObjects;
 
 import javax.swing.*;
-import javax.swing.text.Element;
 
 public class View extends JFrame {
     private Controller controller;
@@ -12,10 +12,6 @@ public class View extends JFrame {
 
     public View(Controller controller) {
         this.controller = controller;
-    }
-
-    public void setEventListener(EventListener eventListener){
-        field.setEventListener(eventListener);
     }
 
     public void init() {
@@ -27,5 +23,23 @@ public class View extends JFrame {
         setLocationRelativeTo(null);
         setTitle("Сокобан");
         setVisible(true);
+    }
+
+    public void setEventListener(EventListener eventListener) {
+        field.setEventListener(eventListener);
+    }
+
+    public void update() {
+        field.repaint();
+    }
+
+    public GameObjects getGameObjects(){
+        return controller.getGameObjects();
+    }
+
+    public void completed(int level){
+        update();
+        JOptionPane.showMessageDialog(this, "Уровень " + level + " пройден.", "Вы выиграли", JOptionPane.INFORMATION_MESSAGE);
+        controller.startNextLevel();
     }
 }
