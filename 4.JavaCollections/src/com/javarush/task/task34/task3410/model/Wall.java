@@ -2,14 +2,20 @@ package com.javarush.task.task34.task3410.model;
 
 import java.awt.*;
 
-public class Wall extends CollisionObject{
+public class Wall extends CollisionObject {
     public Wall(int x, int y) {
         super(x, y);
     }
 
     @Override
     public void draw(Graphics graphics) {
-        graphics.setColor(Color.getHSBColor(222,210,100));
-        graphics.fillRect(x - width / 2 , y - height / 2, width, height);
+        graphics.setColor(new Color(181, 130, 130));
+
+        int xc = getX();
+        int yc = getY();
+        int height = getHeight();
+        int width = getWidth();
+
+        graphics.fillRect(xc - width / 2, yc - height / 2, width, height);
     }
 }

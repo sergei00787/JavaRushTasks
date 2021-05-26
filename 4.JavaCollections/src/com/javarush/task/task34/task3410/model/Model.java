@@ -1,6 +1,5 @@
 package com.javarush.task.task34.task3410.model;
 
-import com.javarush.task.task34.task3410.controller.Controller;
 import com.javarush.task.task34.task3410.controller.EventListener;
 
 import java.net.URISyntaxException;
@@ -8,11 +7,10 @@ import java.nio.file.Paths;
 
 public class Model {
     public static final int FIELD_CELL_SIZE = 20;
-
+    LevelLoader levelLoader;
     private GameObjects gameObjects;
     private int currentLevel = 1;
     private EventListener eventListener;
-    LevelLoader levelLoader;
 
     public Model() {
         try {
