@@ -65,8 +65,9 @@ public class Solution {
 
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws CloneNotSupportedException {
         A a = new A(1,1);
-        //A clonA = a.clone();
+        A clA = a.clone();
+
     }
 }
