@@ -12,8 +12,12 @@ public class Solution {
     private List<Task> tasks;
     private List<String> names;
 
-    private DbDataProvider taskDataProvider = new TaskDataProvider();
-    private DbDataProvider nameDataProvider = new NameDataProvider();
+    private final DbDataProvider taskDataProvider = new TaskDataProvider();
+    private final DbDataProvider nameDataProvider = new NameDataProvider();
+
+    public static void main(String[] args) {
+
+    }
 
     public void refresh() {
         Map taskCriteria = MockView.getFakeTaskCriteria();
@@ -30,7 +34,19 @@ public class Solution {
     class Task {
     }
 
-    public static void main(String[] args) {
+    private class TaskDataProvider implements DbDataProvider{
 
+        @Override
+        public void refreshAllData(Map criteria) {
+            tasks = MockDB.getFakeTasks(criteria);
+        }
+    }
+
+    private class NameDataProvider implements DbDataProvider {
+
+        @Override
+        public void refreshAllData(Map criteria) {
+            names = MockDB.getFakeNames(criteria);
+        }
     }
 }
