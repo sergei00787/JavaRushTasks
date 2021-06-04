@@ -7,6 +7,7 @@ import java.util.List;
 public class ModelData {
     private User activeUser;
     private boolean displayDeletedUserList;
+    private List<User> users;
 
     public boolean isDisplayDeletedUserList() {
         return displayDeletedUserList;
@@ -24,8 +25,6 @@ public class ModelData {
         this.activeUser = activeUser;
     }
 
-    private List<User> users;
-
     public List<User> getUsers() {
         return users;
     }
@@ -33,4 +32,5 @@ public class ModelData {
     public void setUsers(List<User> users) {
         this.users = users;
     }
+
 }
