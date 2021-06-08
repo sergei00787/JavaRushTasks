@@ -1,9 +1,13 @@
 package com.javarush.task.task29.task2909.human;
 
+import javax.swing.text.html.Option;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Predicate;
 
-public class University{
+public class University {
 
     private List<Student> students;
     private String name;
@@ -39,20 +43,27 @@ public class University{
         this.age = age;
     }
 
-    public Student getStudentWithAverageGrade(double averageGrade){
+    public Student getStudentWithAverageGrade(double averageGrade) {
         //TODO:
-        for (Student student: students) {
-            if (student.getAverageGrade() >= averageGrade) return student;
-        }
-        return null;
+        return students.stream().filter(st -> st.getAverageGrade() >= averageGrade).findFirst().orElse(null);
+//        for (Student student : students
+//        ) {
+//            if(student.getAverageGrade() >= averageGrade) return student;
+//        }
+//        return null;
     }
 
     public Student getStudentWithMaxAverageGrade() {
         //TODO:
-        return null;
+        return students.stream().max(Comparator.comparing(Student::getAverageGrade)).orElse(null);
+    }
+    
+    public Student getStudentWithMinAverageGrade(){
+        return students.stream().min(Comparator.comparing(Student::getAverageGrade)).orElse(null);
     }
 
-    public void getStudentWithMinAverageGradeAndExpel() {
-        //TODO:
+    public void expel(Student student){
+        students.remove(student);
     }
+
 }
